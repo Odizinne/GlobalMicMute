@@ -11,16 +11,19 @@ CONFIG += c++17
 INCLUDEPATH += \
     src/Utils \
     src/Configurator \
-    src/GMM
+    src/GMM \
+    src/ShortcutManager
 
 SOURCES += \
     src/main.cpp \
     src/GMM/gmm.cpp \
-    src/Utils/utils.cpp
+    src/Utils/utils.cpp \
+    src/ShortcutManager/shortcutmanager.cpp
 
 HEADERS += \
     src/GMM/gmm.h \
-    src/Utils/utils.h
+    src/Utils/utils.h \
+    src/ShortcutManager/shortcutmanager.h
 
 RESOURCES += \
     src/Resources/resources.qrc \

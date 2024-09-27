@@ -1,11 +1,13 @@
 #include "gmm.h"
 #include <QApplication>
 #include "utils.h"
+#include "shortcutmanager.h"
 #include <QMenu>
 #include <iostream>
 #include <windows.h>
 
 using namespace Utils;
+using namespace ShortcutManager;
 
 GMM::GMM(QWidget *parent)
     : QWidget(parent)
@@ -27,6 +29,12 @@ void GMM::createTrayIcon()
 {
     trayIcon->setIcon(getIcon(isMuted));
     QMenu *trayMenu = new QMenu(this);
+
+    QAction *startupAction = new QAction("Run at startup", this);
+    startupAction->setCheckable(true);
+    startupAction->setChecked(isShortcutPresent());
+    connect(startupAction, &QAction::triggered, this, &GMM::onStartupMenuEntryChecked);
+    trayMenu->addAction(startupAction);
 
     QAction *exitAction = new QAction("Exit", this);
     connect(exitAction, &QAction::triggered, this, &QApplication::quit);
@@ -78,4 +86,9 @@ void GMM::toggleMicMute()
         }
     }
 
+}
+
+void GMM::onStartupMenuEntryChecked(bool checked)
+{
+    manageShortcut(checked);
 }

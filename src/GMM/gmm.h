@@ -17,6 +17,7 @@ protected:
 
 private slots:
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
+    void onStartupMenuEntryChecked(bool checked);
 
 private:
     QSystemTrayIcon *trayIcon;
