@@ -17,7 +17,6 @@ OverlayWidget::OverlayWidget(QWidget *parent) : QWidget(parent), opacityFactor(0
     setAttribute(Qt::WA_TranslucentBackground);
 
     QPainterPath path;
-    path.addRoundedRect(0, 0, width(), height(), 12, 12);
     setMask(QRegion(path.toFillPolygon().toPolygon()));
 
     const QRect screenGeometry = QApplication::primaryScreen()->geometry();
