@@ -4,5 +4,7 @@
         <file>icons/tray_icon_dark.png</file>
         <file>icons/tray_icon_light_muted.png</file>
         <file>icons/tray_icon_dark_muted.png</file>
+        <file>icons/overlay_dark.png</file>
+        <file>icons/overlay_light.png</file>
     </qresource>
 </RCC>

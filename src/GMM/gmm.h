@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QSystemTrayIcon>
+#include "overlaywidget.h"
 
 class GMM : public QWidget
 {
@@ -21,6 +22,7 @@ private slots:
 
 private:
     QSystemTrayIcon *trayIcon;
+    OverlayWidget *overlayWidget;
     bool isMuted;
     static const int HOTKEY_ID = 1;
     void createTrayIcon();
@@ -28,5 +30,6 @@ private:
     bool registerGlobalHotkey();
     void unregisterGlobalHotkey();
     void toggleMicMute();
+    void toggleMutedOverlay(bool enabled);
 };
 #endif // GMM_H

@@ -12,17 +12,18 @@ using namespace ShortcutManager;
 GMM::GMM(QWidget *parent)
     : QWidget(parent)
     , trayIcon(new QSystemTrayIcon(this))
+    , overlayWidget(nullptr)
     , isMuted(GetMicrophoneMuteStatus())
 {
     createTrayIcon();
-    if (!registerGlobalHotkey()) {
-        qWarning() << "Failed to register global hotkey";
-    }
+    registerGlobalHotkey();
+    toggleMutedOverlay(isMuted);
 }
 
 GMM::~GMM()
 {
     unregisterGlobalHotkey();
+    delete overlayWidget;
 }
 
 void GMM::createTrayIcon()
@@ -81,8 +82,10 @@ void GMM::toggleMicMute()
         trayIcon->setIcon(getIcon(isMuted));
         if (GetMicrophoneMuteStatus()) {
             playSoundNotification(false);
+            toggleMutedOverlay(true);
         } else {
             playSoundNotification(true);
+            toggleMutedOverlay(false);
         }
     }
 
@@ -91,4 +94,19 @@ void GMM::toggleMicMute()
 void GMM::onStartupMenuEntryChecked(bool checked)
 {
     manageShortcut(checked);
+}
+
+void GMM::toggleMutedOverlay(bool enabled)
+{
+    if (enabled) {
+        if (overlayWidget == nullptr) {
+            overlayWidget = new OverlayWidget(this);
+        }
+        overlayWidget->show();
+    } else {
+        if (overlayWidget != nullptr) {
+            delete overlayWidget;
+            overlayWidget = nullptr;
+        }
+    }
 }

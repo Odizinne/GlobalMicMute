@@ -12,15 +12,18 @@ INCLUDEPATH += \
     src/Utils \
     src/Configurator \
     src/GMM \
-    src/ShortcutManager
+    src/ShortcutManager \
+    src/OverlayWidget
 
 SOURCES += \
+    src/OverlayWidget/overlaywidget.cpp \
     src/main.cpp \
     src/GMM/gmm.cpp \
     src/Utils/utils.cpp \
     src/ShortcutManager/shortcutmanager.cpp
 
 HEADERS += \
+    src/OverlayWidget/overlaywidget.h \
     src/GMM/gmm.h \
     src/Utils/utils.h \
     src/ShortcutManager/shortcutmanager.h
