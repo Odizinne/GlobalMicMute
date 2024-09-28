@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include <QSystemTrayIcon>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 #include "overlaywidget.h"
 
 class GMM : public QWidget
@@ -22,7 +25,13 @@ private slots:
 
 private:
     QSystemTrayIcon *trayIcon;
+    QAction *startupAction;
+    QAction *notificationAction;
+    QAction *overlayAction;
+    QAction *exitAction;
     OverlayWidget *overlayWidget;
+    QJsonObject settings;
+    static const QString settingsFile;
     bool isMuted;
     static const int HOTKEY_ID = 1;
     void createTrayIcon();
@@ -31,5 +40,8 @@ private:
     void unregisterGlobalHotkey();
     void toggleMicMute();
     void toggleMutedOverlay(bool enabled);
+    void sendNotification(bool enabled);
+    void loadSettings();
+    void saveSettings();
 };
 #endif // GMM_H
