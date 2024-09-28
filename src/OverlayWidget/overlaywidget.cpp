@@ -12,7 +12,7 @@ using namespace Utils;
 
 OverlayWidget::OverlayWidget(QWidget *parent)
     : QWidget(parent)
-    , opacityFactor(0)
+    , opacityFactor(0.3)
     , increasing(true)
 {
     setFixedSize(80, 80);
@@ -23,15 +23,15 @@ OverlayWidget::OverlayWidget(QWidget *parent)
     setMask(QRegion(path.toFillPolygon().toPolygon()));
 
     const QRect screenGeometry = QApplication::primaryScreen()->geometry();
-    int x = screenGeometry.width() - width() - 20;
-    int y = 20;
+    int x = screenGeometry.width() - width() - 25;
+    int y = 25;
     move(x, y);
 
     setWindowOpacity(opacityFactor);
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &OverlayWidget::updateOpacity);
-    timer->start(50);
+    timer->start(16);
 }
 
 void OverlayWidget::paintEvent(QPaintEvent *)
@@ -61,7 +61,7 @@ void OverlayWidget::paintEvent(QPaintEvent *)
 
 void OverlayWidget::updateOpacity()
 {
-    double speed = 0.03;
+    double speed = 0.008;
     double minOpacity = 0.3;
     double maxOpacity = 1.0;
 
