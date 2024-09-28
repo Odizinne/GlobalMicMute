@@ -10,7 +10,7 @@
 
 using namespace Utils;
 
-OverlayWidget::OverlayWidget(QWidget *parent)
+OverlayWidget::OverlayWidget(QString& position, QWidget *parent)
     : QWidget(parent)
     , opacityFactor(0.3)
     , increasing(true)
@@ -22,11 +22,7 @@ OverlayWidget::OverlayWidget(QWidget *parent)
     QPainterPath path;
     setMask(QRegion(path.toFillPolygon().toPolygon()));
 
-    const QRect screenGeometry = QApplication::primaryScreen()->geometry();
-    int x = screenGeometry.width() - width() - 25;
-    int y = 25;
-    move(x, y);
-
+    moveOverlayToPosition(position);
     setWindowOpacity(opacityFactor);
 
     timer = new QTimer(this);
@@ -80,4 +76,57 @@ void OverlayWidget::updateOpacity()
 
     setWindowOpacity(opacityFactor);
     update();
+}
+
+void OverlayWidget::moveOverlayToPosition(const QString &position)
+{
+    const QRect screenGeometry = QApplication::primaryScreen()->geometry();
+    int screenWidth = screenGeometry.width();
+    int screenHeight = screenGeometry.height();
+
+    int x = 0;
+    int y = 0;
+
+    if (position == "topLeftCorner")
+    {
+        x = 25;
+        y = 25;
+    }
+    else if (position == "topRightCorner")
+    {
+        x = screenWidth - width() - 25;
+        y = 25;
+    }
+    else if (position == "topCenter")
+    {
+        x = (screenWidth - width()) / 2;
+        y = 25;
+    }
+    else if (position == "bottomLeftCorner")
+    {
+        x = 25;
+        y = screenHeight - height() - 71; // add 46 (windows taskbar height) to 25
+    }
+    else if (position == "bottomRightCorner")
+    {
+        x = screenWidth - width() - 25;
+        y = screenHeight - height() - 71; // add 46 (windows taskbar height) to 25
+    }
+    else if (position == "bottomCenter")
+    {
+        x = (screenWidth - width()) / 2;
+        y = screenHeight - height() - 71; // add 46 (windows taskbar height) to 25
+    }
+    else if (position == "leftCenter")
+    {
+        x = 25;
+        y = (screenHeight - height()) / 2;
+    }
+    else if (position == "rightCenter")
+    {
+        x = screenWidth - width() - 25;
+        y = (screenHeight - height()) / 2;
+    }
+
+    move(x, y);
 }

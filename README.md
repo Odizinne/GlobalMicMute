@@ -1,14 +1,22 @@
 # GlobalMicMute
 
+[![Github All Releases](https://img.shields.io/github/downloads/odizinne/GlobalMicMute/total.svg)]()
+[![license](https://img.shields.io/github/license/odizinne/GlobalMicMute)]()
+
+Global microphone mute shortcut for windows
+
 *Enabled*  
 ![image](assets/enabled.png)  
 *Disabled*  
 ![image](assets/disabled.png)
 
-# Download
+## Download
 
-Grab latest [release](https://github.com/Odizinne/GlobalMicMute/releases/latest), then extract it and launch it.  
-You can then toggle microphone mute with CTRL + ALT + M or with a single tray icon click.  
-You can right click on the tray icon to exit or to run at startup.
+Grab latest release [here](https://github.com/Odizinne/GlobalMicMute/releases/latest)
 
-Only windows default microphone will be muted.
+## Features
+
+- Mute windows default microphone with shortcut (`CTRL` + `ALT` + `M`) or tray icon click
+- Sound notification when toggling mute
+- Top right overlay when toggling mute
+

@@ -7,6 +7,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include "overlaywidget.h"
+#include "overlaysettings.h"
 
 class GMM : public QWidget
 {
@@ -21,16 +22,17 @@ protected:
 
 private slots:
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
-    void onStartupMenuEntryChecked(bool checked);
 
 private:
     QSystemTrayIcon *trayIcon;
-    QAction *startupAction;
-    QAction *notificationAction;
-    QAction *overlayAction;
+    QAction *settingsAction;
     QAction *exitAction;
+    bool disableNotification;
+    bool disableOverlay;
     OverlayWidget *overlayWidget;
+    OverlaySettings *overlaySettings;
     QJsonObject settings;
+    QString position;
     static const QString settingsFile;
     bool isMuted;
     static const int HOTKEY_ID = 1;
@@ -42,6 +44,9 @@ private:
     void toggleMutedOverlay(bool enabled);
     void sendNotification(bool enabled);
     void loadSettings();
-    void saveSettings();
+    void applySettings();
+    void onSettingsChanged();
+    void onSettingsClosed();
+    void showSettings();
 };
 #endif // GMM_H

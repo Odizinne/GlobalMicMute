@@ -1,6 +1,5 @@
 #include "gmm.h"
 #include "utils.h"
-#include "shortcutmanager.h"
 #include <windows.h>
 #include <QApplication>
 #include <QMenu>
@@ -9,7 +8,6 @@
 #include <QStandardPaths>
 
 using namespace Utils;
-using namespace ShortcutManager;
 
 const QString GMM::settingsFile = QStandardPaths::writableLocation(
                                                QStandardPaths::AppDataLocation)
@@ -19,9 +17,11 @@ GMM::GMM(QWidget *parent)
     : QWidget(parent)
     , trayIcon(new QSystemTrayIcon(this))
     , overlayWidget(nullptr)
+    , overlaySettings(nullptr)
     , isMuted(GetMicrophoneMuteStatus())
 {
     loadSettings();
+    applySettings();
     createTrayIcon();
     registerGlobalHotkey();
     toggleMutedOverlay(isMuted);
@@ -31,6 +31,7 @@ GMM::~GMM()
 {
     unregisterGlobalHotkey();
     delete overlayWidget;
+    delete overlaySettings;
 }
 
 void GMM::createTrayIcon()
@@ -38,25 +39,9 @@ void GMM::createTrayIcon()
     trayIcon->setIcon(getIcon(isMuted));
     QMenu *trayMenu = new QMenu(this);
 
-    startupAction = new QAction("Run at startup", this);
-    startupAction->setCheckable(true);
-    startupAction->setChecked(isShortcutPresent());
-    connect(startupAction, &QAction::triggered, this, &GMM::onStartupMenuEntryChecked);
-    trayMenu->addAction(startupAction);
-
-    overlayAction = new QAction("Disable overlay", this);
-    overlayAction->setCheckable(true);
-    overlayAction->setChecked(settings.value("disableOverlay").toBool());
-    connect(overlayAction, &QAction::triggered, this, &GMM::saveSettings);
-    trayMenu->addAction(overlayAction);
-
-    notificationAction = new QAction("Disable notification", this);
-    notificationAction->setCheckable(true);
-    notificationAction->setChecked(settings.value("disableNotification").toBool());
-    connect(notificationAction, &QAction::triggered, this, &GMM::saveSettings);
-    trayMenu->addAction(notificationAction);
-
-    trayMenu->addSeparator();
+    settingsAction = new QAction("Settings", this);
+    connect(settingsAction, &QAction::triggered, this, &GMM::showSettings);
+    trayMenu->addAction(settingsAction);
 
     exitAction = new QAction("Exit", this);
     connect(exitAction, &QAction::triggered, this, &QApplication::quit);
@@ -112,33 +97,32 @@ void GMM::toggleMicMute()
     }
 }
 
-void GMM::onStartupMenuEntryChecked(bool checked)
-{
-    manageShortcut(checked);
-}
-
 void GMM::toggleMutedOverlay(bool enabled)
 {
-    if (overlayAction->isChecked()) {
+    if (disableOverlay) {
+        if (overlayWidget != nullptr) {
+            overlayWidget->hide();
+            delete overlayWidget;
+            overlayWidget = nullptr;
+        }
         return;
     }
 
     if (enabled) {
         if (overlayWidget == nullptr) {
-            overlayWidget = new OverlayWidget(this);
+            overlayWidget = new OverlayWidget(position, this);
         }
         overlayWidget->show();
     } else {
         if (overlayWidget != nullptr) {
-            delete overlayWidget;
-            overlayWidget = nullptr;
+            overlayWidget->hide();
         }
     }
 }
 
 void GMM::sendNotification(bool enabled)
 {
-    if (notificationAction->isChecked()) {
+    if (disableNotification) {
         return;
     }
 
@@ -147,6 +131,22 @@ void GMM::sendNotification(bool enabled)
     } else {
         playSoundNotification(true);
     }
+}
+
+void GMM::showSettings()
+{
+    if (overlaySettings) {
+        overlaySettings->showNormal();
+        overlaySettings->raise();
+        overlaySettings->activateWindow();
+        return;
+    }
+
+    overlaySettings = new OverlaySettings;
+    overlaySettings->setAttribute(Qt::WA_DeleteOnClose);
+    connect(overlaySettings, &OverlaySettings::closed, this, &GMM::onSettingsClosed);
+    connect(overlaySettings, &OverlaySettings::settingsChanged, this, &GMM::onSettingsChanged);
+    overlaySettings->show();
 }
 
 void GMM::loadSettings()
@@ -158,29 +158,49 @@ void GMM::loadSettings()
 
     QFile file(settingsFile);
     if (!file.exists()) {
+        disableNotification = false;
+        disableOverlay = false;
+        position = "topRightCorner";
         return;
+    }
 
-    } else {
-        if (file.open(QIODevice::ReadOnly)) {
-            QJsonParseError parseError;
-            QJsonDocument doc = QJsonDocument::fromJson(file.readAll(), &parseError);
-            if (parseError.error == QJsonParseError::NoError) {
-                settings = doc.object();
-            }
-            file.close();
+    if (file.open(QIODevice::ReadOnly)) {
+        QJsonParseError parseError;
+        QJsonDocument doc = QJsonDocument::fromJson(file.readAll(), &parseError);
+        if (parseError.error == QJsonParseError::NoError) {
+            settings = doc.object();
         }
+        file.close();
     }
 }
 
-void GMM::saveSettings()
+void GMM::applySettings()
 {
-    settings["disableOverlay"] = overlayAction->isChecked();
-    settings["disableNotification"] = notificationAction->isChecked();
+    position = settings.value("overlayPosition").toString();
+    disableOverlay = settings.value("disableOverlay").toBool();
+    disableNotification = settings.value("disableNotification").toBool();
+}
 
-    QFile file(settingsFile);
-    if (file.open(QIODevice::WriteOnly)) {
-        QJsonDocument doc(settings);
-        file.write(doc.toJson(QJsonDocument::Indented));
-        file.close();
+void GMM::onSettingsChanged()
+{
+    loadSettings();
+    applySettings();
+
+    if (isMuted) {
+        toggleMutedOverlay(!disableOverlay);
     }
+
+    if (!disableOverlay) {
+        if (!overlayWidget) {
+            overlayWidget = new OverlayWidget(position, this);
+        }
+        overlayWidget->moveOverlayToPosition(position);
+    }
+}
+
+void GMM::onSettingsClosed()
+{
+    disconnect(overlaySettings, &OverlaySettings::closed, this, &GMM::onSettingsClosed);
+    disconnect(overlaySettings, &OverlaySettings::settingsChanged, this, &GMM::onSettingsChanged);
+    overlaySettings = nullptr;
 }

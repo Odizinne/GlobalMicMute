@@ -9,7 +9,8 @@ class OverlayWidget : public QWidget
     Q_OBJECT
 
 public:
-    OverlayWidget(QWidget *parent = nullptr);
+    explicit OverlayWidget(QString& position, QWidget *parent = nullptr);
+    void moveOverlayToPosition(const QString &position);
 
 protected:
     void paintEvent(QPaintEvent *event) override;

@@ -13,9 +13,11 @@ INCLUDEPATH += \
     src/Configurator \
     src/GMM \
     src/ShortcutManager \
-    src/OverlayWidget
+    src/OverlayWidget \
+    src/OverlaySettings
 
 SOURCES += \
+    src/OverlaySettings/overlaysettings.cpp \
     src/OverlayWidget/overlaywidget.cpp \
     src/main.cpp \
     src/GMM/gmm.cpp \
@@ -23,6 +25,7 @@ SOURCES += \
     src/ShortcutManager/shortcutmanager.cpp
 
 HEADERS += \
+    src/OverlaySettings/overlaysettings.h \
     src/OverlayWidget/overlaywidget.h \
     src/GMM/gmm.h \
     src/Utils/utils.h \
@@ -39,4 +42,7 @@ LIBS += -lole32 -lavrt -luser32 -ladvapi32 -lwinmm
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    src/OverlaySettings/overlaysettings.ui
 
