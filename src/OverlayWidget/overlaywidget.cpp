@@ -10,7 +10,10 @@
 
 using namespace Utils;
 
-OverlayWidget::OverlayWidget(QWidget *parent) : QWidget(parent), opacityFactor(0), increasing(true)
+OverlayWidget::OverlayWidget(QWidget *parent)
+    : QWidget(parent)
+    , opacityFactor(0)
+    , increasing(true)
 {
     setFixedSize(80, 80);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::Tool);
