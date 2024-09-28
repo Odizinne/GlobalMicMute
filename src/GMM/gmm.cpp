@@ -158,9 +158,7 @@ void GMM::loadSettings()
 
     QFile file(settingsFile);
     if (!file.exists()) {
-        disableNotification = false;
-        disableOverlay = false;
-        position = "topRightCorner";
+        createDefaultSettings();
         return;
     }
 
@@ -170,6 +168,20 @@ void GMM::loadSettings()
         if (parseError.error == QJsonParseError::NoError) {
             settings = doc.object();
         }
+        file.close();
+    }
+}
+
+void GMM::createDefaultSettings()
+{
+    settings["overlayPosition"] = "topRightCorner";
+    settings["disableOverlay"] = false;
+    settings["disableNotification"] = false;
+
+    QFile file(settingsFile);
+    if (file.open(QIODevice::WriteOnly)) {
+        QJsonDocument doc(settings);
+        file.write(doc.toJson(QJsonDocument::Indented));
         file.close();
     }
 }

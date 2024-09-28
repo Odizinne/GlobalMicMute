@@ -99,7 +99,7 @@ void OverlaySettings::applySettings()
 
 void OverlaySettings::saveSettings()
 {
-    loadSettings();
+    qDebug() << "pass";
     QString position;
 
     QList<QPair<QRadioButton*, QString>> radioButtons = {
@@ -137,6 +137,7 @@ void OverlaySettings::onDisableOverlayStateChanged()
 {
     ui->frame->setDisabled(ui->overlayCheckBox->isChecked());
     ui->label->setDisabled(ui->overlayCheckBox->isChecked());
+    saveSettings();
 }
 
 void OverlaySettings::onStartupCheckBoxStateChanged()

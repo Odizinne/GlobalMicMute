@@ -48,5 +48,7 @@ private:
     void onSettingsChanged();
     void onSettingsClosed();
     void showSettings();
+    void createDefaultSettings();
+
 };
 #endif // GMM_H
