@@ -58,17 +58,20 @@ void OverlayWidget::paintEvent(QPaintEvent *)
 
 void OverlayWidget::updateOpacity()
 {
-    double speed = 0.04;
+    double speed = 0.03;
+    double minOpacity = 0.3;
+    double maxOpacity = 1.0;
+
     if (increasing)
     {
         opacityFactor += speed;
-        if (opacityFactor >= 1.0)
+        if (opacityFactor >= maxOpacity)
             increasing = false;
     }
     else
     {
         opacityFactor -= speed;
-        if (opacityFactor <= 0.0)
+        if (opacityFactor <= minOpacity)
             increasing = true;
     }
 
