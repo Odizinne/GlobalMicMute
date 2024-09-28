@@ -56,6 +56,8 @@ void GMM::createTrayIcon()
     connect(notificationAction, &QAction::triggered, this, &GMM::saveSettings);
     trayMenu->addAction(notificationAction);
 
+    trayMenu->addSeparator();
+
     exitAction = new QAction("Exit", this);
     connect(exitAction, &QAction::triggered, this, &QApplication::quit);
     trayMenu->addAction(exitAction);
