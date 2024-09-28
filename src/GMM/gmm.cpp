@@ -46,13 +46,13 @@ void GMM::createTrayIcon()
 
     overlayAction = new QAction("Disable overlay", this);
     overlayAction->setCheckable(true);
-    overlayAction->setChecked(settings.value("overlay").toBool());
+    overlayAction->setChecked(settings.value("disableOverlay").toBool());
     connect(overlayAction, &QAction::triggered, this, &GMM::saveSettings);
     trayMenu->addAction(overlayAction);
 
     notificationAction = new QAction("Disable notification", this);
     notificationAction->setCheckable(true);
-    notificationAction->setChecked(settings.value("notification").toBool());
+    notificationAction->setChecked(settings.value("disableNotification").toBool());
     connect(notificationAction, &QAction::triggered, this, &GMM::saveSettings);
     trayMenu->addAction(notificationAction);
 
@@ -172,8 +172,8 @@ void GMM::loadSettings()
 
 void GMM::saveSettings()
 {
-    settings["overlay"] = overlayAction->isChecked();
-    settings["notification"] = notificationAction->isChecked();
+    settings["disableOverlay"] = overlayAction->isChecked();
+    settings["disableNotification"] = notificationAction->isChecked();
 
     QFile file(settingsFile);
     if (file.open(QIODevice::WriteOnly)) {
