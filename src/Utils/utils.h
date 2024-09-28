@@ -11,6 +11,7 @@ namespace Utils {
     bool SetMicrophoneMute(bool mute);
     bool GetMicrophoneMuteStatus();
     QIcon getIcon(bool muted);
+    QString getTheme();
 }
 
 #endif // UTILS_H

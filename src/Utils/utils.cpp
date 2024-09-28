@@ -8,7 +8,7 @@
 #include <endpointvolume.h>
 #include <windows.h>
 
-QString getTheme()
+QString Utils::getTheme()
 {
     // Determine the theme based on registry value
     QSettings settings(
