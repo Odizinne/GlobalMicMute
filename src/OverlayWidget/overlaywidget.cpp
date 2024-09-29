@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QtMath>
 #include <QPainterPath>
+#include <QMap>
 
 using namespace Utils;
 
@@ -89,50 +90,22 @@ void OverlayWidget::moveOverlayToPosition(const QString &position)
     const QRect screenGeometry = QApplication::primaryScreen()->geometry();
     int screenWidth = screenGeometry.width();
     int screenHeight = screenGeometry.height();
+    int margin = 25;
+    int taskbarOffset = 46;
 
-    int x = 0;
-    int y = 0;
+    QMap<QString, std::function<QPoint()>> positionMap = {
+                                                          {"topLeftCorner",      [=]() { return QPoint(margin, margin); }},
+                                                          {"topRightCorner",     [=]() { return QPoint(screenWidth - width() - margin, margin); }},
+                                                          {"topCenter",          [=]() { return QPoint((screenWidth - width()) / 2, margin); }},
+                                                          {"bottomLeftCorner",   [=]() { return QPoint(margin, screenHeight - height() - margin - taskbarOffset); }},
+                                                          {"bottomRightCorner",  [=]() { return QPoint(screenWidth - width() - margin, screenHeight - height() - margin - taskbarOffset); }},
+                                                          {"bottomCenter",       [=]() { return QPoint((screenWidth - width()) / 2, screenHeight - height() - margin - taskbarOffset); }},
+                                                          {"leftCenter",         [=]() { return QPoint(margin, (screenHeight - height()) / 2); }},
+                                                          {"rightCenter",        [=]() { return QPoint(screenWidth - width() - margin, (screenHeight - height()) / 2); }},
+                                                          };
 
-    if (position == "topLeftCorner")
-    {
-        x = 25;
-        y = 25;
+    if (positionMap.contains(position)) {
+        QPoint newPos = positionMap[position]();
+        move(newPos);
     }
-    else if (position == "topRightCorner")
-    {
-        x = screenWidth - width() - 25;
-        y = 25;
-    }
-    else if (position == "topCenter")
-    {
-        x = (screenWidth - width()) / 2;
-        y = 25;
-    }
-    else if (position == "bottomLeftCorner")
-    {
-        x = 25;
-        y = screenHeight - height() - 71; // add 46 (windows taskbar height) to 25
-    }
-    else if (position == "bottomRightCorner")
-    {
-        x = screenWidth - width() - 25;
-        y = screenHeight - height() - 71; // add 46 (windows taskbar height) to 25
-    }
-    else if (position == "bottomCenter")
-    {
-        x = (screenWidth - width()) / 2;
-        y = screenHeight - height() - 71; // add 46 (windows taskbar height) to 25
-    }
-    else if (position == "leftCenter")
-    {
-        x = 25;
-        y = (screenHeight - height()) / 2;
-    }
-    else if (position == "rightCenter")
-    {
-        x = screenWidth - width() - 25;
-        y = (screenHeight - height()) / 2;
-    }
-
-    move(x, y);
 }
