@@ -29,6 +29,7 @@ private:
     QAction *exitAction;
     bool disableNotification;
     bool disableOverlay;
+    bool potatoMode;
     OverlayWidget *overlayWidget;
     OverlaySettings *overlaySettings;
     QJsonObject settings;

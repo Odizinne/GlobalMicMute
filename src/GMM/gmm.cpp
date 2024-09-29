@@ -110,7 +110,7 @@ void GMM::toggleMutedOverlay(bool enabled)
 
     if (enabled) {
         if (overlayWidget == nullptr) {
-            overlayWidget = new OverlayWidget(position, this);
+            overlayWidget = new OverlayWidget(position, potatoMode, this);
         }
         overlayWidget->show();
     } else {
@@ -177,6 +177,7 @@ void GMM::createDefaultSettings()
     settings["overlayPosition"] = "topRightCorner";
     settings["disableOverlay"] = false;
     settings["disableNotification"] = false;
+    settings["potatoMode"] = false;
 
     QFile file(settingsFile);
     if (file.open(QIODevice::WriteOnly)) {
@@ -190,6 +191,7 @@ void GMM::applySettings()
 {
     position = settings.value("overlayPosition").toString();
     disableOverlay = settings.value("disableOverlay").toBool();
+    potatoMode = settings.value("potatoMode").toBool();
     disableNotification = settings.value("disableNotification").toBool();
 }
 
@@ -204,7 +206,7 @@ void GMM::onSettingsChanged()
 
     if (!disableOverlay) {
         if (!overlayWidget) {
-            overlayWidget = new OverlayWidget(position, this);
+            overlayWidget = new OverlayWidget(position, potatoMode, this);
         }
         overlayWidget->moveOverlayToPosition(position);
     }

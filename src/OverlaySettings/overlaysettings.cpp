@@ -39,6 +39,7 @@ OverlaySettings::OverlaySettings(QWidget *parent)
 
     connect(ui->overlayCheckBox, &QCheckBox::stateChanged, this, &OverlaySettings::onDisableOverlayStateChanged);
     connect(ui->soundCheckBox, &QCheckBox::stateChanged, this, &OverlaySettings::saveSettings);
+    connect(ui->potatoModeCheckBox, &QCheckBox::stateChanged, this, &OverlaySettings::saveSettings);
     connect(ui->startupCheckBox, &QCheckBox::stateChanged, this, &OverlaySettings::onStartupCheckBoxStateChanged);
 }
 
@@ -95,6 +96,7 @@ void OverlaySettings::applySettings()
 
     ui->overlayCheckBox->setChecked(settings.value("disableOverlay").toBool());
     ui->soundCheckBox->setChecked(settings.value("disableNotification").toBool());
+    ui->potatoModeCheckBox->setChecked(settings.value("potatoMode").toBool());
 }
 
 void OverlaySettings::saveSettings()
@@ -123,6 +125,7 @@ void OverlaySettings::saveSettings()
     settings["overlayPosition"] = position;
     settings["disableOverlay"] = ui->overlayCheckBox->isChecked();
     settings["disableNotification"] = ui->soundCheckBox->isChecked();
+    settings["potatoMode"] = ui->potatoModeCheckBox->isChecked();
 
     QFile file(settingsFile);
     if (file.open(QIODevice::WriteOnly)) {

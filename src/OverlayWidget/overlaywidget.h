@@ -9,7 +9,7 @@ class OverlayWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit OverlayWidget(QString& position, QWidget *parent = nullptr);
+    explicit OverlayWidget(QString& position, bool& potatoMode, QWidget *parent = nullptr);
     void moveOverlayToPosition(const QString &position);
 
 protected:

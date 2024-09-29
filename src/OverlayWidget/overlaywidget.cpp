@@ -10,7 +10,7 @@
 
 using namespace Utils;
 
-OverlayWidget::OverlayWidget(QString& position, QWidget *parent)
+OverlayWidget::OverlayWidget(QString& position, bool& potatoMode, QWidget *parent)
     : QWidget(parent)
     , opacityFactor(0.3)
     , increasing(true)
@@ -25,9 +25,15 @@ OverlayWidget::OverlayWidget(QString& position, QWidget *parent)
     moveOverlayToPosition(position);
     setWindowOpacity(opacityFactor);
 
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &OverlayWidget::updateOpacity);
-    timer->start(16);
+    if (!potatoMode) {
+        opacityFactor = 0.3;
+        timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, this, &OverlayWidget::updateOpacity);
+        timer->start(16);
+    } else {
+        opacityFactor = 1;
+        setWindowOpacity(opacityFactor);
+    }
 }
 
 void OverlayWidget::paintEvent(QPaintEvent *)
