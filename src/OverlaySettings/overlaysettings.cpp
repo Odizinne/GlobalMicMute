@@ -101,7 +101,6 @@ void OverlaySettings::applySettings()
 
 void OverlaySettings::saveSettings()
 {
-    qDebug() << "pass";
     QString position;
 
     QList<QPair<QRadioButton*, QString>> radioButtons = {
