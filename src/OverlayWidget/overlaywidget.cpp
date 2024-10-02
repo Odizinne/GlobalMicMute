@@ -17,7 +17,7 @@ OverlayWidget::OverlayWidget(QString& position, bool& potatoMode, QWidget *paren
     , increasing(true)
 {
     setFixedSize(80, 80);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::Tool);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::Tool | Qt::WindowTransparentForInput);
     setAttribute(Qt::WA_TranslucentBackground);
 
     QPainterPath path;
