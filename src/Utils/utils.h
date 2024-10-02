@@ -12,6 +12,8 @@ namespace Utils {
     bool GetMicrophoneMuteStatus();
     QIcon getIcon(bool muted);
     QString getTheme();
+    QString getAccentColor(const QString &accentKey);
+    QPixmap createIconWithAccentBackground();
 }
 
 #endif // UTILS_H

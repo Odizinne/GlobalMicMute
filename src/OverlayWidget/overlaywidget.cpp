@@ -30,41 +30,45 @@ OverlayWidget::OverlayWidget(QString& position, bool& potatoMode, QWidget *paren
         opacityFactor = 0.3;
         timer = new QTimer(this);
         connect(timer, &QTimer::timeout, this, &OverlayWidget::updateOpacity);
-        timer->start(16);
+        timer->start(32);
     } else {
         opacityFactor = 1;
         setWindowOpacity(opacityFactor);
     }
 }
 
-void OverlayWidget::paintEvent(QPaintEvent *)
-{
+void OverlayWidget::paintEvent(QPaintEvent *) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
+    // Create a rounded rectangle clipping path
+    QPainterPath path;
+    path.addRoundedRect(0, 0, width(), height(), 8, 8);
+
+    // Clip the painter to the rounded rectangle
+    painter.setClipPath(path);
+
+    // Fill the background with black
     painter.setBrush(Qt::black);
     painter.setPen(Qt::NoPen);
     painter.drawRect(0, 0, width(), height());
 
-    QString theme = getTheme();
-    QString iconTheme = (theme == "light") ? "dark" : "light";
-    QString iconPath = QString(":/icons/overlay_%1.png").arg(iconTheme);
-    QPixmap icon(iconPath);
+    // Create the overlay icon with accent background
+    QPixmap overlayIcon = createIconWithAccentBackground();
 
-    if (!icon.isNull())
-    {
-        int iconWidth = icon.width();
-        int iconHeight = icon.height();
-        int x = (width() - iconWidth) / 2;
-        int y = (height() - iconHeight) / 2;
+    // Center the icon within the widget
+    int iconWidth = overlayIcon.width();
+    int iconHeight = overlayIcon.height();
+    int x = (width() - iconWidth) / 2;
+    int y = (height() - iconHeight) / 2;
 
-        painter.drawPixmap(x, y, icon);
-    }
+    // Draw the icon
+    painter.drawPixmap(x, y, overlayIcon);
 }
 
 void OverlayWidget::updateOpacity()
 {
-    double speed = 0.0075;
+    double speed = 0.015;
     double minOpacity = 0.3;
     double maxOpacity = 1.0;
 
