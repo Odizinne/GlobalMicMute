@@ -29,6 +29,7 @@ private:
     void loadSettings();
     void applySettings();
     void saveSettings();
+    void setFramesBackground();
 
 signals:
     void settingsChanged();

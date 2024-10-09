@@ -1,5 +1,6 @@
 #include "overlaysettings.h"
 #include "ui_overlaysettings.h"
+#include "utils.h"
 #include <QStandardPaths>
 #include <QDir>
 #include <QFile>
@@ -21,6 +22,7 @@ OverlaySettings::OverlaySettings(QWidget *parent)
     ui->startupCheckBox->setChecked(isShortcutPresent());
     loadSettings();
     applySettings();
+    setFramesBackground();
 
     QList<QRadioButton*> radioButtons = {
         ui->topLeftCorner,
@@ -47,6 +49,15 @@ OverlaySettings::~OverlaySettings()
 {
     emit closed();
     delete ui;
+}
+
+void OverlaySettings::setFramesBackground()
+{
+    Utils::setFrameColorBasedOnWindow(this, ui->frame);
+    Utils::setFrameColorBasedOnWindow(this, ui->frame_2);
+    Utils::setFrameColorBasedOnWindow(this, ui->frame_3);
+    Utils::setFrameColorBasedOnWindow(this, ui->frame_4);
+    Utils::setFrameColorBasedOnWindow(this, ui->frame_5);
 }
 
 void OverlaySettings::loadSettings()
