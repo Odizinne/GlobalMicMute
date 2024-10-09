@@ -26,6 +26,9 @@ OverlayWidget::OverlayWidget(QString& position, bool& potatoMode, QWidget *paren
     moveOverlayToPosition(position);
     setWindowOpacity(opacityFactor);
 
+    // Cache the overlay icon
+    cachedOverlayIcon = createIconWithAccentBackground();
+
     if (!potatoMode) {
         opacityFactor = 0.3;
         timer = new QTimer(this);
@@ -53,17 +56,14 @@ void OverlayWidget::paintEvent(QPaintEvent *) {
     painter.setPen(Qt::NoPen);
     painter.drawRect(0, 0, width(), height());
 
-    // Create the overlay icon with accent background
-    QPixmap overlayIcon = createIconWithAccentBackground();
-
     // Center the icon within the widget
-    int iconWidth = overlayIcon.width();
-    int iconHeight = overlayIcon.height();
+    int iconWidth = cachedOverlayIcon.width();
+    int iconHeight = cachedOverlayIcon.height();
     int x = (width() - iconWidth) / 2;
     int y = (height() - iconHeight) / 2;
 
-    // Draw the icon
-    painter.drawPixmap(x, y, overlayIcon);
+    // Draw the cached icon
+    painter.drawPixmap(x, y, cachedOverlayIcon);
 }
 
 void OverlayWidget::updateOpacity()

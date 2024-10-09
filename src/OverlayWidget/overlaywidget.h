@@ -19,6 +19,7 @@ private slots:
     void updateOpacity();
 
 private:
+    QPixmap cachedOverlayIcon;
     QTimer *timer;
     double opacityFactor;
     bool increasing;
