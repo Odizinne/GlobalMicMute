@@ -46,7 +46,7 @@ void OverlayWidget::paintEvent(QPaintEvent *) {
 
     // Create a rounded rectangle clipping path
     QPainterPath path;
-    path.addRoundedRect(0, 0, width(), height(), 8, 8);
+    // path.addRoundedRect(0, 0, width(), height(), 8, 8);
 
     // Clip the painter to the rounded rectangle
     painter.setClipPath(path);
